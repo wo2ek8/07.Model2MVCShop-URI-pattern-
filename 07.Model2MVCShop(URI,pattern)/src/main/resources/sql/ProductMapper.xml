@@ -64,13 +64,12 @@
 	  		inner_table.*, ROWNUM AS row_seq
 	  		FROM (
 	  			SELECT
-	  			product.*, transaction.tran_status_code
-				FROM product, transaction
+	  			product.*
+				FROM product
 				
 				
 					<where>
-						product.prod_no = transaction.prod_no(+)
-						and product.quantity > 0
+						product.quantity > 0
 						<if test="searchCondition != null">
 							<if test="searchCondition == 0 and searchKeyword !='' ">
 								and product.prod_no like '%'||#{searchKeyword}||'%'
@@ -125,13 +124,12 @@
 	  	COUNT(*)
 	  	FROM(
 	  		SELECT
-	  		product.prod_name, product.price, product.reg_date, transaction.tran_status_code
-			FROM product, transaction
+	  		product.prod_name, product.price, product.reg_date
+			FROM product
 			
 			
 				<where>
-					product.prod_no = transaction.prod_no(+)
-					and product.quantity > 0
+					product.quantity > 0
 					<if test="searchCondition != null">
 						<if test="searchCondition == 0 and searchKeyword !='' ">
 							and product.prod_no like '%'||#{searchKeyword}||'%'

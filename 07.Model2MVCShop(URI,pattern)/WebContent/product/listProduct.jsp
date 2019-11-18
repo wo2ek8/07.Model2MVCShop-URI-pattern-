@@ -210,7 +210,7 @@ function fncGetList(currentPage, sorting){
 					
 					<c:if test="${param.menu.equals('search') }">
 						<c:if test="${product.quantity > 0}">
-							<a href="/product/getProduct?prodNo=${product.prodNo }">${product.prodName }</a>
+							<a href="/product/getHistory?prodNo=${product.prodNo }">${product.prodName }</a>
 						</c:if>
 						
 					</c:if>

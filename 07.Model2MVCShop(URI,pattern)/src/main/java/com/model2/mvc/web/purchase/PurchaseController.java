@@ -215,6 +215,10 @@ public class PurchaseController {
 		return modelAndView;
 	}
 	
+	
+	
+	
+	
 	/*
 	 * @RequestMapping("/getPurchase.do") public String
 	 * getPurchase(@RequestParam("tranNo") int tranNo, Model model) throws Exception

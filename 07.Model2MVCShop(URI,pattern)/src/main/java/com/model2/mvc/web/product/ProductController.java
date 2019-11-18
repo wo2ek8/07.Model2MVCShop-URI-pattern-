@@ -129,17 +129,77 @@ public class ProductController {
 	
 	
 	//@RequestMapping("/getProduct.do")
-	@RequestMapping(value="getProduct", method=RequestMethod.GET)
-	public ModelAndView getProduct(@RequestParam("prodNo") String prodNo, HttpServletRequest request,
-			HttpServletResponse response, @ModelAttribute("search") Search search) throws Exception {
+//	@RequestMapping(value="getProduct", method=RequestMethod.GET)
+//	public ModelAndView getProduct(@RequestParam("prodNo") String prodNo, HttpServletRequest request,
+//			HttpServletResponse response, @ModelAttribute("search") Search search) throws Exception {
+//
+//		System.out.println("/product/getProduct : GET");
+//		// Business Logic
+//		Product product = productService.getProduct(Integer.parseInt(prodNo));
+//		// Model과 View 연결
+//
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.addObject("product", product);
+//
+//		Cookie[] cookies = request.getCookies();
+//
+//		String noLine = "";
+//
+//		if (cookies != null) {
+//			for (int i = 0; i < cookies.length; i++) {
+//				if (cookies[i].getName().equals("history")) {
+//
+//					noLine += cookies[i].getValue();
+//				}
+//			}
+//
+//		}
+//		if (noLine != "") {
+//			noLine = prodNo + "," + noLine;
+//		} else {
+//			noLine = prodNo;
+//		}
+//
+//		Cookie cookie = new Cookie("history", noLine);
+//		
+//		System.out.println("noLine : " + noLine);
+//
+//		cookie.setMaxAge(-1);
+//		response.addCookie(cookie);
+//		
+//		
+//
+//		if (search.getCurrentPage() == 0) {
+//			search.setCurrentPage(1);
+//		}
+//		search.setPageSize(pageSize);
+//
+//		Map<String, Object> map = reviewService.getReviewList(search, Integer.parseInt(prodNo));
+//
+//		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("prodReview")).intValue(), pageUnit,
+//				pageSize);
+//		System.out.println("resultPage : " + resultPage);
+//
+//		modelAndView.addObject("list", map.get("list"));
+//		modelAndView.addObject("resultPage", resultPage);
+//		modelAndView.addObject("search", search);
+//
+//		modelAndView.setViewName("/product/afterUpdate.jsp");
+//
+//		return modelAndView;
+//	}
+	
+	@RequestMapping(value="getHistory", method=RequestMethod.GET)
+	public ModelAndView getHistory(@RequestParam("prodNo") String prodNo, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
-		System.out.println("/product/getProduct : GET");
+		System.out.println("/product/getHistory : GET");
 		// Business Logic
-		Product product = productService.getProduct(Integer.parseInt(prodNo));
+		
 		// Model과 View 연결
 
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("product", product);
+		
 
 		Cookie[] cookies = request.getCookies();
 
@@ -169,26 +229,81 @@ public class ProductController {
 		
 		
 
-		if (search.getCurrentPage() == 0) {
-			search.setCurrentPage(1);
-		}
-		search.setPageSize(pageSize);
+		
 
+		modelAndView.setViewName("redirect:/product/getProduct?prodNo=" + prodNo);
+
+		return modelAndView;
+	}
+	
+	@RequestMapping(value="getProduct", method=RequestMethod.GET)
+	public ModelAndView getProduct(@RequestParam("prodNo") String prodNo) throws Exception {
+
+		System.out.println("/product/getProduct : GET");
+		// Business Logic
+		Product product = productService.getProduct(Integer.parseInt(prodNo));
+		// Model과 View 연결
+		
+		Search search = new Search();
 		Map<String, Object> map = reviewService.getReviewList(search, Integer.parseInt(prodNo));
-
-		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("prodReview")).intValue(), pageUnit,
-				pageSize);
-		System.out.println("resultPage : " + resultPage);
-
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("product", product);
 		modelAndView.addObject("list", map.get("list"));
-		modelAndView.addObject("resultPage", resultPage);
-		modelAndView.addObject("search", search);
+		
 
 		modelAndView.setViewName("/product/afterUpdate.jsp");
 
 		return modelAndView;
 	}
 	
+	@RequestMapping(value="getHistoryList", method=RequestMethod.GET)
+	public String getHistoryList(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session) throws Exception {
+
+		System.out.println("history.jsp");
+
+		request.setCharacterEncoding("euc-kr");
+		response.setCharacterEncoding("euc-kr");
+		String history = null;
+		Cookie[] cookies = request.getCookies();
+		System.out.println("cookies : " + cookies);
+		
+		java.util.List<Product> list = new ArrayList<Product>();
+		if (cookies!=null && cookies.length > 0) {
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				System.out.println("cookie : " + cookie);
+				System.out.println("cookie.getName() : " + cookie.getName());
+				if (cookie.getName().equals("history")) {
+					history = cookie.getValue();
+					System.out.println("history : " + history);
+				}
+			}
+			if (history != null) {
+				String[] h = history.split(",");
+				for (int i = 0; i < h.length; i++) {
+					if (!h[i].equals("null")) {
+						
+	
+						System.out.println(h[i]);
+						
+						Product product = productService.getProduct(Integer.parseInt(h[i]));
+						
+						if(product.getQuantity() >= 1) {
+							list.add(product);
+						}
+						
+						
+					}
+				}
+			}
+		}
+		
+		session.setAttribute("list", list);
+
+		return "redirect:/history.jsp";
+	}
 
 	/*
 	 * @RequestMapping("/updateProductView.do") public String
@@ -440,8 +555,11 @@ public class ProductController {
 					if (!(c[i] == null) && !c[i].equals("")) {
 						Product product = productService.getProduct(Integer.parseInt(c[i]));
 						System.out.println("\t\t\t product : " + product);
-
-						list.add(product);
+						
+						if(product.getQuantity() >= 1) {
+							list.add(product);
+						}
+						
 					}
 				}
 			}
