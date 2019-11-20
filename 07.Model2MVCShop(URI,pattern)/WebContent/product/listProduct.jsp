@@ -201,7 +201,8 @@ function fncGetList(currentPage, sorting){
             <div class="product">
                 
                 <div class="image">
-                    <img src="../images/uploadFiles/${product.fileName }" alt="">
+                    
+                    <img src="/images/uploadFiles/${product.fileNameList[0]}"/>
                 </div>
                 <div class="prodName">
 	                <c:if test="${param.menu.equals('manage') }">

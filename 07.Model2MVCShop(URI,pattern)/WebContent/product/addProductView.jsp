@@ -23,10 +23,10 @@ function fncAddProduct(){
 		alert("상품명은 반드시 입력하여야 합니다.");
 		return;
 	}
-	if(detail == null || detail.length<1){
+	/* if(detail == null || detail.length<1){
 		alert("상품상세정보는 반드시 입력하여야 합니다.");
 		return;
-	}
+	} */
 	if(manuDate == null || manuDate.length<1){
 		alert("제조일자는 반드시 입력하셔야 합니다.");
 		return;
@@ -49,7 +49,7 @@ function resetData(){
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm" method="post">
+<form name="detailForm" method="post" enctype="multipart/form-data">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -138,8 +138,8 @@ function resetData(){
 		<td width="104" class="ct_write">상품이미지</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<input		type="file" name="fileName" class="ct_input_g" 
-							style="width: 200px; height: 19px" maxLength="13"/>
+			<input type="file" name="uploadFiles" class="ct_input_g" 
+							style="width: 200px; height: 19px" maxLength="13" placeholder="파일 선택" multiple="multiple"/>
 		</td>
 	</tr>
 	<tr>

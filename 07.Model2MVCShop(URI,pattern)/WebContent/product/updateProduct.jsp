@@ -151,7 +151,9 @@ function fncAddProduct(){
 		<td class="ct_write01">
 			<%-- <input	type="file" name="fileName" class="ct_input_g" 
 						style="width: 200px; height: 19px" maxLength="13" value="<%=productVO.getFileName()%>"/> --%>
-						<input	type="file" name="fileName" class="ct_input_g" style="width: 200px; height: 19px" maxLength="13" value="${product.fileName }"/>
+						
+						<input type="file" name="uploadFiles" class="ct_input_g" 
+							style="width: 200px; height: 19px" maxLength="13" placeholder="파일 선택" multiple="multiple"/>
 		</td>
 	</tr>
 	<tr>

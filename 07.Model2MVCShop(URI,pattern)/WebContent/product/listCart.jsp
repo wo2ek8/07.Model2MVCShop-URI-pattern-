@@ -140,8 +140,9 @@ center {
 		<c:forEach var="product" items="${list }">
 		<tr>
 			<td><input type="checkbox" name="check"></td>
-			<td><img src="../images/uploadFiles/${product.fileName }"
-				alt=""></td>
+			<td>
+				<img src="/images/uploadFiles/${product.fileNameList[0]}"/>
+				</td>
 			<td class="name"><strong>${product.prodName }</strong></td>
 			<td><strong>${product.price }¿ø</strong></td>
 			<td>-</td>

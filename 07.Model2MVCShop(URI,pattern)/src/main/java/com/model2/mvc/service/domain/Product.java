@@ -1,6 +1,8 @@
 package com.model2.mvc.service.domain;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Product {
@@ -14,6 +16,7 @@ public class Product {
 	private Date regDate;
 	private String proTranCode;
 	private int quantity;
+	private List<String> fileNameList;
 	
 	public Product() {
 		
@@ -38,6 +41,11 @@ public class Product {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+		fileNameList = new ArrayList<String>();
+		String[] fileNames = fileName.split(":");
+		for (String a : fileNames) {
+			this.fileNameList.add(a);
+		}
 	}
 	public String getManuDate() {
 		return manuDate;
@@ -75,9 +83,17 @@ public class Product {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
+	
+	public List<String> getFileNameList() {
+		return fileNameList;
+	}
+
+	public void setFileNameList(List<String> fileNameList) {
+		this.fileNameList = fileNameList;
+	}
 
 	@Override
 	public String toString() {
-		return "ProductVO : [proTranCode]" + proTranCode + "[fileName]" + fileName + "[manuDate]" + manuDate+ "[price]" + price + "[prodDetail]" + prodDetail + "[prodName]" + prodName + "[prodNo]" + prodNo;
+		return "ProductVO : " + "[fileNameList]" + fileNameList + "[proTranCode]" + proTranCode + "[fileName]" + fileName + "[manuDate]" + manuDate+ "[price]" + price + "[prodDetail]" + prodDetail + "[prodName]" + prodName + "[prodNo]" + prodNo;
 	}
 }

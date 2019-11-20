@@ -1,14 +1,20 @@
 package com.model2.mvc.web.product;
 
 import java.awt.List;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.model2.mvc.common.Page;
@@ -25,6 +32,7 @@ import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
+import com.model2.mvc.service.product.impl.ProductServiceImpl;
 import com.model2.mvc.service.review.ReviewService;
 
 //==> 회원관리 Controller
@@ -57,29 +65,65 @@ public class ProductController {
 	// @Value("#{commonProperties['pageSize'] ? : 2}")
 	int pageSize;
 
-	/*
-	 * @RequestMapping("/addProduct.do") public String
-	 * addProduct(@ModelAttribute("product") Product product) throws Exception {
-	 * 
-	 * System.out.println("/addProduct.do"); //Business Logic
-	 * productService.addProduct(product);
-	 * 
-	 * return "forward:/product/readProduct.jsp"; }
-	 */
+	private static final String UPLOAD_PATH = "C:\\\\Users\\\\User\\\\git\\\\07.Model2MVCShop-URI-pattern-\\\\07.Model2MVCShop(URI,pattern)\\\\WebContent\\\\images\\\\uploadFiles";
+	
+	@RequestMapping(value = "addProduct", method = RequestMethod.POST)
+	public String addProduct(@RequestParam("uploadFiles") ArrayList<MultipartFile> fileName, @ModelAttribute("product") Product product) throws Exception {
+		 String result = "";
+		 int i = 0;
+		 System.out.println( "addProduct() start...");
+		 for (MultipartFile files : fileName) {
+			 i++;
+			result = saveFile(files) + result;
+			if (i != fileName.size()) {
+				result = ":" + result;
+			}
+		}
+		    System.out.println("result : " + result);
+		    
+		    product.setManuDate(product.getManuDate().replace("-", ""));
+			product.setFileName(result);
+			System.out.println("fileNameList : " + product.getFileNameList());
+			
+			productService.addProduct(product);
+		return "forward:/product/readProduct.jsp";
+	}
+	  
+	  
+	  private String saveFile(MultipartFile file) {
+
+//			이름 중복되지 않게 파일이름 변경
+			UUID uuid = UUID.randomUUID();
+			String saveName = uuid + "_" + file.getOriginalFilename();
+
+			System.out.println("File Save Name : " + saveName);
+
+			File saveFile = new File(UPLOAD_PATH, saveName);
+
+			try {
+				file.transferTo(saveFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			return saveName;
+		}
+	 
 
 	//@RequestMapping("/addProduct.do")
-	@RequestMapping(value="addProduct", method=RequestMethod.POST)
-	public ModelAndView addProduct(@ModelAttribute("product") Product product) throws Exception {
-
-		System.out.println("/product/addProduct : POST");
-		// Business Logic
-		productService.addProduct(product);
-
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("/product/readProduct.jsp");
-
-		return modelAndView;
-	}
+//	@RequestMapping(value="addProduct", method=RequestMethod.POST)
+//	public ModelAndView addProduct(@ModelAttribute("product") Product product) throws Exception {
+//
+//		System.out.println("/product/addProduct : POST");
+//		// Business Logic
+//		productService.addProduct(product);
+//
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("/product/readProduct.jsp");
+//
+//		return modelAndView;
+//	}
 
 	/*
 	//@RequestMapping("/getProduct.do")

@@ -102,7 +102,10 @@
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="26">
-						<img src="/images/uploadFiles/${product.fileName }" width="300px"/>
+						
+						<c:forEach var="i" items="${product.fileNameList}">
+						<img src="/images/uploadFiles/${i}"/>
+					</c:forEach>
 					</td>
 				</tr>
 			</table>

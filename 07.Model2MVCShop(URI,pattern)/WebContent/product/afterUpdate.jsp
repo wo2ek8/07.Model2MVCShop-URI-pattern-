@@ -144,7 +144,7 @@
             width: 100%;
         }
         div.review {
-            margin-bottom: 30px;
+            margin: 30px 0;
         }
         div.review div.textArea {
             width: 100%;
@@ -192,6 +192,14 @@
 			color: rgb(217, 159, 157);
 			margin-left: 6px;
 		}
+		div.imagelist {
+            
+            text-align: center;
+        }
+        div.imagelist img {
+            
+            margin: 10px;
+        }
     </style>
 
 <title>Insert title here</title>
@@ -220,7 +228,10 @@ function fncAddReview(){
 <div class="wrap">
         <div class="afterUpdate">
             <div class="image">
-                <img src="/images/uploadFiles/${product.fileName }" alt="">
+                
+                
+						<img src="/images/uploadFiles/${product.fileNameList[0]}"/>
+			
             </div>
             <div class="productInfo">
                 <div class="prodName">
@@ -279,6 +290,12 @@ function fncAddReview(){
                 </div>
             </div>
         </div>
+        <div class="imagelist">
+            <c:forEach var="i" items="${product.fileNameList}" begin="1">
+						<img src="/images/uploadFiles/${i}"/>
+			</c:forEach>
+        </div>
+        
         
         <div class="review">
             <div class="top">
